@@ -35,13 +35,6 @@ async function Download(country_code, year, isExport = true)
     }
 
     await pipeline(response.data, fs.createWriteStream(fileName));
-
-    // const workBook = xlsx.readFile(fileName);
-    //
-    // const sheetNames = workBook.SheetNames;
-    //
-    // const data = xlsx.utils.sheet_to_json(workBook.Sheets[sheetNames[1]]);
-    // return data;
 }
 
 const codes = iso.all();
@@ -68,3 +61,25 @@ downloaded += queue.length;
 queue = [];
             
 console.log(`Downloaded: ${downloaded}`);
+
+let out = 'from,to,year,flow,amount\n';
+for(const country of codes)
+{
+    for(let i = startYear; i <= endYear; i++)
+    {
+        const fileName = `output/${country.alpha3}-${i}-Export.xlsx`;
+        if(!fs.existsSync(fileName)) continue;
+
+        const workBook = xlsx.readFile(fileName);
+
+        const data = xlsx.utils.sheet_to_json(workBook.Sheets[workBook.SheetNames[1]]);
+        for(const row of data)
+        {
+            if(row['Export (US$ Thousand)'] == undefined) continue;
+
+            out += `${row['Reporter Name']},${row['Partner Name']},${row['Year']},${row['Trade Flow']},${row['Export (US$ Thousand)']}\n`;
+        }
+    }
+    console.log(`${country.country} done`);
+}
+fs.writeFileSync('combined.csv', out);
