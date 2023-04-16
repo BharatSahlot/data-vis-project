@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import xlsx from 'xlsx';
 import util from 'util';
 import stream from 'stream';
+import * as cheerio from 'cheerio';
 
 async function Download(country_code, year, product, isExport = true, store_per_country = true)
 {
@@ -48,7 +49,7 @@ async function Download(country_code, year, product, isExport = true, store_per_
     return store_per_country ? res : sum;
 }
 
-async function DownloadForProduct(country_code, start_year, end_year, product, store_per_country = true) {
+export async function DownloadForProduct(country_code, start_year, end_year, product, store_per_country = true) {
     let pdata = {
         name: product.name,
         export_data: {},
@@ -85,4 +86,32 @@ async function DownloadForProduct(country_code, start_year, end_year, product, s
     return pdata;
 }
 
-export default DownloadForProduct;
+export async function GetRegionOfCountry(country_code)
+{
+    const agent = new https.Agent({
+        secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+    });
+
+    const response = await axios({
+        method: 'get',
+        url: `https://wits.worldbank.org/CountryProfile/en/${country_code}`,
+        httpsAgent: agent,
+        responseType: 'document'
+    });
+
+    if(response.status != 200)
+    {
+        return null;
+    }
+
+    const html = response.data;
+    const dom = cheerio.load(html);
+
+    const ele = dom(".elements > h2:nth-child(1)");
+    const str = ele.html();
+    if(str == undefined)
+    {
+        return null;
+    }
+    return str.split("</span>")[5].split(" <span>")[0];
+}
