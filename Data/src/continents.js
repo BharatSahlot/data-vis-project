@@ -65,7 +65,7 @@ for(const regionName of Object.keys(regions))
                 let queue = [];
                 for(const product of PRODUCTS)
                 {
-                    queue.push(DownloadForProduct(country, 1998, 2020, product));
+                    queue.push(DownloadForProduct(country, 1998, 2020, product, false));
                 }
                 const values = await Promise.all(queue);
                 for(const i in values)
