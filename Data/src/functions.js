@@ -6,6 +6,8 @@ import xlsx from 'xlsx';
 import util from 'util';
 import stream from 'stream';
 import * as cheerio from 'cheerio';
+import iso from 'iso-3166-1';
+import stringSimilarity from 'string-similarity';
 
 async function Download(country_code, year, product, isExport = true, store_per_country = true)
 {
@@ -114,4 +116,21 @@ export async function GetRegionOfCountry(country_code)
         return null;
     }
     return str.split("</span>")[5].split(" <span>")[0];
+}
+
+export function FindCountry(name)
+{
+    const countries = iso.all();
+
+    let best = 0, best_c = null;
+    for(const country of countries)
+    {
+        const frac = stringSimilarity.compareTwoStrings(name, country.country);
+        if(frac > best)
+        {
+            best = frac;
+            best_c = country;
+        }
+    }
+    return { frac: best, country: best_c };
 }
