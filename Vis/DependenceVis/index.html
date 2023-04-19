@@ -10,6 +10,18 @@
         <link href="styles.css" rel="stylesheet">
     </head>
     <body>
+        <div id="dvis">
+        </div>
+
         <script type="module" src="./dependence.js"></script>
+        <script type="module">
+            import { Run } from "./dependence.js";
+
+            Run({
+                root: document.querySelector("#dvis"),
+                width: 1000,
+                height: 1000
+            });
+        </script>
     </body>
 </html>
