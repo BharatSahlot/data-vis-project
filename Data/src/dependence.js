@@ -3,9 +3,10 @@
 
 import iso from 'iso-3166-1';
 import xlsx from 'xlsx';
-import { DownloadForProduct, FindCountry } from './functions.js';
+import { Download, FindCountry } from './functions.js';
 import PRODUCTS from './products.js';
 import fs from 'fs';
+import { setInterval } from 'timers/promises';
 
 const countries = iso.all();
 
@@ -18,6 +19,8 @@ for(const row of gdpFileData)
     gdpData[row.Code] = row;
 }
 
+let downloaded = 0;
+
 async function DownloadYear(year)
 {
     const data = {
@@ -25,12 +28,30 @@ async function DownloadYear(year)
         import_data: [],
         export_data: []
     };
+
+    let country_gdp = [];
     for(const country of countries)
     {
         if(gdpData[country.alpha3] == undefined || gdpData[country.alpha3][year] == undefined) continue;
 
-        const cd = await DownloadForProduct(country.alpha3, year, year, PRODUCTS[PRODUCTS.length - 1], true);
-        for(const key of Object.keys(cd.import_data[year]))
+        country_gdp.push({
+            code: country.alpha3,
+            gdp: gdpData[country.alpha3][year]
+        });
+    }
+    country_gdp.sort((a, b) => a.gdp - b.gdp);
+    country_gdp = country_gdp.slice(0, 25);
+
+    for(const country of countries)
+    {
+        // if(!country_gdp.some((a) => a.code == country.alpha3)) continue;
+        if(gdpData[country.alpha3] == undefined || gdpData[country.alpha3][year] == undefined) continue;
+
+        // const cd = await DownloadForProduct(country.alpha3, year, year, PRODUCTS[PRODUCTS.length - 1], true);
+        const import_data = await Download(country.alpha3, year, PRODUCTS[PRODUCTS.length - 1].code, false, true);
+
+        let to_push = [];
+        for(const key of Object.keys(import_data))
         {
             if(key == 'total' || key == 'Unspecified') continue;
 
@@ -46,14 +67,20 @@ async function DownloadYear(year)
                 a: country.alpha3,
                 b: b,
                 gdp: gdpData[country.alpha3][year],
-                value: cd.import_data[year][key],
-                perc: cd.import_data[year][key] / cd.import_data[year]['total']
+                value: import_data[key],
+                perc: import_data[key] / import_data['total']
             };
 
-            if(d.perc >= 0.1) data.import_data.push(d);
+            /* if(d.perc >= 0.1) */ to_push.push(d);
         }
+        to_push.sort((a, b) => a.value - b.value);
+        to_push = to_push.slice(0, to_push.length < 5 ? to_push.length : 5);
+        for(const x of to_push) data.import_data.push(x);
 
-        for(const key of Object.keys(cd.export_data[year]))
+
+        to_push = []
+        const export_data = await Download(country.alpha3, year, PRODUCTS[PRODUCTS.length - 1].code, true, true);
+        for(const key of Object.keys(export_data))
         {
             if(key == 'total' || key == 'Unspecified') continue;
 
@@ -69,12 +96,17 @@ async function DownloadYear(year)
                 a: country.alpha3,
                 b: b,
                 gdp: gdpData[country.alpha3][year],
-                value: cd.export_data[year][key],
-                perc: cd.export_data[year][key] / cd.export_data[year]['total']
+                value: export_data[key],
+                perc: export_data[key] / export_data['total']
             };
 
-            if(d.perc >= 0.1) data.export_data.push(d);
+            /* if(d.perc >= 0.1) */ to_push.push(d);
         }
+        to_push.sort((a, b) => a.value - b.value);
+        to_push = to_push.slice(0, to_push.length < 5 ? to_push.length : 5);
+        for(const x of to_push) data.export_data.push(x);
+
+        downloaded++;
     }
     return data;
 }
@@ -85,6 +117,14 @@ for(let i = 1998; i <= 2020; i++)
 {
     queue.push(DownloadYear(i));
 }
+
+let last = 0;
+setInterval(() => {
+    if(downloaded == last) return;
+
+    last = downloaded;
+    console.log(downloaded);
+}, 500);
 
 const values = await Promise.all(queue);
 
