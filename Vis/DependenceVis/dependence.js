@@ -195,7 +195,6 @@ export async function Run(config)
     const root = d3.select(config.root);
 
     const data = await d3.json("./dependence.json");
-    shuffle(data);
 
     const gdpData = await d3.csv("./gdp.csv");
 
@@ -230,7 +229,7 @@ export async function Run(config)
 
         for(const row of gdpData)
         {
-            gdpMap[row.Code] = row[selYear.node().selectedIndex + 1998];
+            gdpMap[row.Code] = parseFloat(row[selYear.node().selectedIndex + 1998]);
         }
 
         ShowGraph(data[selYear.node().selectedIndex][selType.node().selectedIndex == 0 ? 'export_data' : 'import_data'], root.append("div"), gdpMap, config, selType.node().selectedIndex);
