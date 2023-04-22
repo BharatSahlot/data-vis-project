@@ -1,32 +1,63 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
 const max = (a, b) => a > b ? a : b;
+let nodeColor = {};
+
+function shuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
+
+function ProcessEdges(edges)
+{
+    edges = edges.filter(e => e.perc >= 0.1);
+
+    let graph = {};
+    for(const edge of edges)
+    {
+        if(graph[edge.a] == undefined) graph[edge.a] = [];
+        if(graph[edge.b] == undefined) graph[edge.b] = [];
+
+        graph[edge.a].push(edge.b);
+    }
+
+    const nodes = Object.keys(graph);
+    shuffle(nodes);
+
+    return {
+        edges: edges,
+        nodes: nodes 
+    };
+}
 
 // data of a year
 function ShowGraph(edges, root, gdpMap, config, direction)
 {
+    const processed = ProcessEdges(edges);
+
+    edges = processed.edges;
+    const nodes = processed.nodes;
+
     let maxGDP = 0, maxTrade = 0;
 
-    let nodes = {};
+    // let nodes = {};
     for(const edge of edges)
     {
-        if(gdpMap[edge.a] == undefined) gdpMap[edge.a] = edge.gdp;
-
-        nodes[edge.a] = "";
-        nodes[edge.b] = "";
-
         maxGDP = max(maxGDP, edge.gdp);
         maxTrade = max(maxTrade, edge.value);
     }
 
-    let nodeColor = {};
-
-    nodes = Object.keys(nodes);
     for(const i in nodes)
     {
         const r = gdpMap[nodes[i]] == undefined ? 0.01 : Math.pow(gdpMap[nodes[i]] / maxGDP, 0.3);
 
-        nodeColor[nodes[i]] = d3.color(d3.interpolateRainbow(i / nodes.length));
+        if(nodeColor[nodes[i]] == undefined) nodeColor[nodes[i]] = d3.color(d3.interpolateRainbow(i / nodes.length));
 
         let nes = [];
         for(const edge of edges)
@@ -48,10 +79,10 @@ function ShowGraph(edges, root, gdpMap, config, direction)
         let e = {
             source: edges[i].a,
             target: edges[i].b,
-            distance: (1 - edges[i].perc) * 50,
+            distance: 30 + (1 - edges[i].perc) * 100,
             width: 1 + (edges[i].value / maxTrade) * 5
         };
-        if(e.distance <= 50) links.push(e);
+        /* if(edges[i].perc >= 0.1)  */links.push(e);
     }
 
     const simulation = d3.forceSimulation(nodes)
@@ -104,8 +135,8 @@ function ShowGraph(edges, root, gdpMap, config, direction)
         if(direction) offset++;
         else offset--;
 
-        link.attr("stroke-dashoffset", _ => {
-                return offset;
+        link.attr("stroke-dashoffset", d => {
+                return offset * d.width / 5;
             })
     }, 50);
 
@@ -115,13 +146,17 @@ function ShowGraph(edges, root, gdpMap, config, direction)
             .attr("y1", d => d.source.y)
             .attr("x2", d => d.target.x)
             .attr("y2", d => d.target.y)
-            .attr("stroke", d => nodeColor[d.source.id].formatHex())
+            .attr("stroke", d => nodeColor[d.target.id].formatHex())
             .attr("style", d => {
                 if(hovered == null || hovered != d.source) return "";
 
                 return "stroke-dasharray: 10, 4"
             })
-            .attr("opacity", d => hovered == null || hovered == d.source ? 1 : 0.3)
+            .attr("stroke-opacity", d => {
+                if(hovered == null) return max(0.3, d.width / 5);
+                if(hovered == d.source) return 1;
+                return max(0.1, d.width / 7);
+            });
 
 
         node
@@ -160,6 +195,7 @@ export async function Run(config)
     const root = d3.select(config.root);
 
     const data = await d3.json("./dependence.json");
+    shuffle(data);
 
     const gdpData = await d3.csv("./gdp.csv");
 

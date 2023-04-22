@@ -73,7 +73,7 @@ async function DownloadYear(year)
 
             /* if(d.perc >= 0.1) */ to_push.push(d);
         }
-        to_push.sort((a, b) => a.value - b.value);
+        to_push.sort((a, b) => b.value - a.value);
         to_push = to_push.slice(0, to_push.length < 5 ? to_push.length : 5);
         for(const x of to_push) data.import_data.push(x);
 
@@ -102,7 +102,7 @@ async function DownloadYear(year)
 
             /* if(d.perc >= 0.1) */ to_push.push(d);
         }
-        to_push.sort((a, b) => a.value - b.value);
+        to_push.sort((a, b) => b.value - a.value);
         to_push = to_push.slice(0, to_push.length < 5 ? to_push.length : 5);
         for(const x of to_push) data.export_data.push(x);
 
