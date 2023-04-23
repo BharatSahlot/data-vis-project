@@ -6,14 +6,17 @@ import xlsx from 'xlsx';
 import util from 'util';
 import stream from 'stream';
 import * as cheerio from 'cheerio';
+import iso from 'iso-3166-1';
+import stringSimilarity from 'string-similarity';
 
-async function Download(country_code, year, product, isExport = true, store_per_country = true)
+export async function Download(country_code, year, product, isExport = true, store_per_country = true)
 {
     const fileName = `./temp/${country_code}-${year}-${isExport ? 'Export' : 'Import'}-${product}.xlsx`;
 
     // if file doesnt already exist then only download
     if(!fs.existsSync(fileName))
     {
+        console.log(`file: ${fileName} not found`);
         const pipeline = util.promisify(stream.pipeline);
 
         const agent = new https.Agent({
@@ -28,6 +31,7 @@ async function Download(country_code, year, product, isExport = true, store_per_
         });
         if(response.status != 200)
         {
+            console.log("Error in request")
             return;
         }
         await pipeline(response.data, fs.createWriteStream(fileName));
@@ -40,7 +44,7 @@ async function Download(country_code, year, product, isExport = true, store_per_
     let res = {}, sum = 0;
     for(const row of data)
     {
-        const val = row["Export (US$ Thousand)"];
+        const val = row[`${isExport ? 'Export' : 'Import'} (US$ Thousand)`];
         sum += parseInt(val);
 
         if(store_per_country) res[row["Partner Name"]] = val;
@@ -70,10 +74,12 @@ export async function DownloadForProduct(country_code, start_year, end_year, pro
         pdata.export_data[i] = value.value;
     }
 
+    queue = []
     for(let i = start_year; i <= end_year; i++)
     {
         queue.push(Download(country_code, i, product.code, false, store_per_country));
     }
+
     values = await Promise.allSettled(queue);
     for(let i = start_year; i <= end_year; i++)
     {
@@ -114,4 +120,21 @@ export async function GetRegionOfCountry(country_code)
         return null;
     }
     return str.split("</span>")[5].split(" <span>")[0];
+}
+
+export function FindCountry(name)
+{
+    const countries = iso.all();
+
+    let best = 0, best_c = null;
+    for(const country of countries)
+    {
+        const frac = stringSimilarity.compareTwoStrings(name, country.country);
+        if(frac > best)
+        {
+            best = frac;
+            best_c = country;
+        }
+    }
+    return { frac: best, country: best_c };
 }
