@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Dataquest - Data Visualization Project</title>
+
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.css" rel="stylesheet">
+
+        <link href="styles.css" rel="stylesheet">
+
+        <style>
+        body {
+            padding: 0 0;
+            margin: 0 0;
+            background: black;
+            color: white;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="dvis">
+        </div>
+
+        <script type="module">
+            import { Run } from "./stacked_area.js";
+
+            Run({
+                root: document.querySelector("#dvis"),
+                width: $(window).width(), // window.screen.width,
+                height: $(window).height(), // window.screen.height
+            });
+        </script>
+    </body>
+</html>
