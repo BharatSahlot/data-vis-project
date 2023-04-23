@@ -1,18 +1,8 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
-function shuffle(a) {
-    var j, x, i;
-    for (i = a.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        x = a[i];
-        a[i] = a[j];
-        a[j] = x;
-    }
-    return a;
-}
-
-function ShowGraph(data, groups, config)
+function ShowGraph(data, config)
 {
+    console.log(data);
     const margin = {
         top: -5, //10,
         right: 0, // 30,
@@ -27,104 +17,148 @@ function ShowGraph(data, groups, config)
         .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    const stacked = d3.stack()
-        .keys(groups)
-        (data);
-    console.log(stacked);
-
     const xScale = d3.scaleLinear()
-        .domain(d3.extent(data, d => d.year))
+        .domain([1988, 2020])
         .range([ 0, config.width ]);
 
     const yScale = d3.scaleLinear()
-        .domain([0, 55000000000])
+        .domain([0, 1.5 * d3.max(data, d => d3.max(d.values, c => c.value))])
         .range([config.height, 0]);
 
     const color = d3.interpolateMagma;
 
-    svg
-        .selectAll("layers")
-        .data(stacked)
-        .join("path")
-        .style("fill", (_, i) => {
-            return color(1 - (i / groups.length));
-        })
-        .style("stroke", (_, i) => {
-            return color(1 - (i / groups.length));
-        })
-        .attr("d", d3.area()
-            .x(d => xScale(d.data.year))
-            .y0(d => yScale(0))
-            .y1(d => yScale(0))
-        )
-        .transition()
-        .duration(2000)
-        .attr("d", d3.area()
-            .x(d => xScale(d.data.year))
-            .y0(d => yScale(d[0]))
-            .y1(d => yScale(d[1]))
-        )
-        .delay((_, i) => (200 - i) * 10)
+    const labelOffsetY = 75;
+
+    svg.append("text")
+        .attr("x", config.width - 157)
+        .attr("y", labelOffsetY - 40)
+        .style("fill", "lightgray")
+        .text("Top 10(2020)");
+
+    svg.append("text")
+        .attr("x", config.width - 157)
+        .attr("y", labelOffsetY - 20)
+        .style("fill", "lightgray")
+        .text("Countries");
+
+    for(const cnt of data)
+    {
+        const col = color(0.1 + 0.9 * (cnt.si / data.length));
+        let ele = svg
+            .append("path")
+            .datum(cnt.values)
+            .attr("fill", col)
+            .attr("opacity", 0.5 + 0.3 * (1 - (cnt.si / data.length)))
+            .attr("stroke", color(0.9 * (cnt.si / data.length)))
+            .attr("stroke-width", 2.5)
+            .attr("d", d3.area()
+                .curve(d3.curveBasis)
+                .x(d => xScale(d.year))
+                .y0(yScale(0))
+                .y1(yScale(0))
+            );
+
+        for(let i = 0; i < cnt.values.length; i++)
+        {
+            ele = ele.transition()
+            .duration(150)
+            .ease(d3.easeLinear)
+            .attr("d", d3.area()
+                .curve(d3.curveBasis)
+                .x(d => xScale(d.year))
+                .y0(yScale(0))
+                .y1((d, j) => {
+                    if(j <= i) return yScale(d.value);
+                    return yScale(0);
+                })
+            )
+        }
+
+        if(cnt.si >= 10) continue;
+
+        svg.append("circle")
+            .attr("cx", config.width - 150)
+            .attr("cy", labelOffsetY + 25 * cnt.si)
+            .attr("r", 7)
+            .attr("fill", col)
+
+        svg.append("text")
+            .attr("x", config.width - 140)
+            .attr("y", labelOffsetY + 5 + 25 * cnt.si)
+            .style("fill", "gray")
+            .text(cnt.country);
+    }
 }
 
-function MakeDataIntoRows(data)
+function ProcessData(data)
 {
-    let countries = [];
-    for(const value of data[0].values)
-    {
-        if(value.country != " World") 
-            countries.push(value.country);
-    }
-
+    let res = {};
     for(const year of data)
     {
-        let seen = [];
-        for(const value of year.values)
+        for(const cnt of year.values)
         {
-            seen.push(value.country);
-        }
+            if(cnt.country == " World" ||
+                cnt.country == "Europe & Central Asia" ||
+                cnt.country == "East Asia & Pacific" ||
+                cnt.country == "North America" ||
+                cnt.country == "Latin America & Caribbean" ||
+                cnt.country == "Middle East & North Africa" ||
+                cnt.country == "Unspecified" ||
+                cnt.country == "South Asia" ||
+                cnt.country == "Sub-Saharan Africa" ||
+                cnt.country == "Sub-Saharan Africa"
+            ) continue;
 
-        let nc = [];
-        for(const country of countries)
-        {
-            if(!seen.includes(country)) continue;
-            nc.push(country);
+            if(res[cnt.country] == undefined) res[cnt.country] = [];
+
+            res[cnt.country].push({
+                year: year.year,
+                value: cnt.export
+            });
         }
-        countries = nc;
     }
+    let keys = Object.keys(res);
+    let fr = [];
 
-    let mx = 0;
-    let rows = [];
-    for(const year of data)
+    for(const key of keys)
     {
-        let row = {
-            year: year.year
-        };
-        for(const value of year.values)
-        {
-            if(!countries.includes(value.country)) continue;
-
-            row[value.country] = value.export;
-            if(value.export > mx) mx = value.export;
-            // rows.push({
-            //     year: year.year,
-            //     country: value.country,
-            //     exportValue: value["export"],
-            //     importValue: value["import"]
-            // });
-        }
-        rows.push(row);
+        fr.push({
+            country: key,
+            values: res[key]
+        });
     }
-    console.log(mx);
-    return {
-        data: rows,
-        groups: countries
-    };
+    fr.sort((a, b) => -(a.values[a.values.length - 1].value - b.values[b.values.length - 1].value));
+
+    const toSelect = 15;
+    let frr = [];
+    for(let i = 0; i < 10; i++) frr.push(fr[i]);
+
+    for(let i = 10; i < fr.length; i++)
+    {
+        if(Math.round(Math.random() * fr.length) <= toSelect) frr.push(fr[i]);
+    }
+
+    fr = frr;
+
+    // shuffle(fr);
+    for(let i = 0; i < fr.length; i++)
+    {
+        fr[i].i = i;
+    }
+
+    fr.sort((a, b) => -(a.values[a.values.length - 1].value - b.values[b.values.length - 1].value));
+    for(let i = 0; i < fr.length; i++)
+    {
+        fr[i].si = i;
+    }
+
+    return fr;
 }
 
 export async function Run(config)
 {
-    const data = MakeDataIntoRows(await d3.json("./totalonly.json"));
+    const data = ProcessData(await d3.json("./totalonly.json"));
+    console.log(data);
 
-    ShowGraph(data.data, data.groups, config)
+    ShowGraph(data, config)
 }
