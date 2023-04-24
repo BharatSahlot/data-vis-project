@@ -132,8 +132,7 @@ function ShowGraph(edges, root, gdpMap, config, direction)
 
     let offset = 0;
     setInterval(() => {
-        if(direction) offset++;
-        else offset--;
+        offset--;
 
         link.attr("stroke-dashoffset", d => {
                 return offset * d.width / 5;
@@ -148,13 +147,13 @@ function ShowGraph(edges, root, gdpMap, config, direction)
             .attr("y2", d => d.target.y)
             .attr("stroke", d => nodeColor[d.target.id].formatHex())
             .attr("style", d => {
-                if(hovered == null || hovered != d.source) return "";
+                if(hovered == null || (direction == 0 && hovered != d.source) || (direction == 1 && hovered != d.target)) return "";
 
                 return "stroke-dasharray: 10, 4"
             })
             .attr("stroke-opacity", d => {
                 if(hovered == null) return max(0.3, d.width / 5);
-                if(hovered == d.source) return 1;
+                if((direction == 0 && hovered == d.source) || (direction == 1 && hovered == d.target)) return 1;
                 return max(0.1, d.width / 7);
             });
 
@@ -198,6 +197,8 @@ export async function Run(config, folder)
 
     const gdpData = await d3.csv(folder + "gdp.csv");
 
+    const cont = root.append("div");
+
     const selYear = root.append("select")
     .attr("name", "dep_years")
     .attr("id", "dep_years");
@@ -222,8 +223,8 @@ export async function Run(config, folder)
         .text("Import");
 
     const showGraph = () => {
-        if(root.select("div"))
-            root.select("div").remove();
+        if(cont.select("svg"))
+            cont.select("svg").remove();
 
         let gdpMap = {};
 
@@ -232,7 +233,7 @@ export async function Run(config, folder)
             gdpMap[row.Code] = parseFloat(row[selYear.node().selectedIndex + 1998]);
         }
 
-        ShowGraph(data[selYear.node().selectedIndex][selType.node().selectedIndex == 0 ? 'export_data' : 'import_data'], root, gdpMap, config, selType.node().selectedIndex);
+        ShowGraph(data[selYear.node().selectedIndex][selType.node().selectedIndex == 0 ? 'export_data' : 'export_data'], cont, gdpMap, config, selType.node().selectedIndex);
     }
 
     selYear.on("change", showGraph);
