@@ -47,6 +47,7 @@ function ShowGraph(data, config)
         let ele = svg
             .append("path")
             .datum(cnt.values)
+            .attr("id", `S1_area_${cnt.si}`)
             .attr("fill", col)
             .attr("opacity", 0.5 + 0.3 * (1 - (cnt.si / data.length)))
             .attr("stroke", color(0.9 * (cnt.si / data.length)))
@@ -74,6 +75,18 @@ function ShowGraph(data, config)
             )
         }
 
+        $(`#S1_area_${cnt.si}`).qtip({
+            style: { classes: 'qtip-dark' },
+            content: {
+                text: () => {
+                    return cnt.country;
+                }
+            },
+            position: {
+                target: 'mouse'
+            }
+        });
+
         if(cnt.si >= 10) continue;
 
         svg.append("circle")
@@ -88,6 +101,18 @@ function ShowGraph(data, config)
             .style("fill", "gray")
             .text(cnt.country);
     }
+
+    const mouseText = svg.append("text")
+        .attr("x", config.width - 230)
+        .attr("y", config.height - 15)
+        .style("fill", "white")
+        .text("Year: 2020, Value: 12321321");
+
+    svg.on("mousemove", e => {
+        const xPerc = e.clientX / config.width;
+        const yPerc = 1 - (e.clientY / config.height);
+        mouseText.text(`Year: ${1988 + Math.round((2020 - 1988) * xPerc)}, Value: ${0 + yPerc * (1.5 * d3.max(data, d => d3.max(d.values, c => c.value)))}`);
+    });
 }
 
 function ProcessData(data)

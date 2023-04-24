@@ -120,7 +120,7 @@ function ShowGraph(edges, root, gdpMap, config, direction)
     for(const nd of nodes)
     {
         $("#F1_Node_" + nd.id).qtip({
-            style: { classes: 'qtip-blue' },
+            style: { classes: 'qtip-dark' },
             content: {
                 text: () => {
                     return nd.id + "<br>" + 
