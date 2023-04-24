@@ -15,7 +15,7 @@
         <link href="styles.css" rel="stylesheet">
     </head>
     <body>
-        <div class="fullpage" style="display: flex; align-items: center; justify-content: space-around; margin: 0 50px;">
+        <div class="fullpage" style="display: flex; align-items: center; justify-content: space-around; padding: 0 50px;">
             <div>
                 <!-- left -->
                 <div style="display: flex; align-items: end;">
@@ -31,7 +31,9 @@
                 <p style="text-align: center; color: gray;">Force graph for trade behaviour</p>
             </div>
         </div>
-        <div class="fullpage" style="display: flex; align-items: center; justify-content: space-around; margin: 0 50px;">
+        <div class="fullpage" style="display: flex; flex-direction: column; align-items: center;">
+            <h2 style="font-size: 56px; margin-top: 25px;">Trade Network</h2>
+            <div id="network_vis"></div>
         </div>
 
         <script src="./src/index.js"></script>
@@ -42,6 +44,16 @@
                 root: document.querySelector("#title_vis"),
                 width: 1000,
                 height: 750 
+            }, "./DependenceVis/");
+        </script>
+
+        <script type="module">
+            import { Run } from "./DependenceVis/dependence.js";
+
+            Run({
+                root: document.querySelector("#network_vis"),
+                width: 1000,
+                height: 1000 
             }, "./DependenceVis/");
         </script>
     </body>

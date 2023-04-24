@@ -190,13 +190,13 @@ function ShowGraph(edges, root, gdpMap, config, direction)
     }
 }
 
-export async function Run(config)
+export async function Run(config, folder)
 {
     const root = d3.select(config.root);
 
-    const data = await d3.json("./dependence.json");
+    const data = await d3.json(folder + "dependence.json");
 
-    const gdpData = await d3.csv("./gdp.csv");
+    const gdpData = await d3.csv(folder + "gdp.csv");
 
     const selYear = root.append("select")
     .attr("name", "dep_years")
@@ -232,7 +232,7 @@ export async function Run(config)
             gdpMap[row.Code] = parseFloat(row[selYear.node().selectedIndex + 1998]);
         }
 
-        ShowGraph(data[selYear.node().selectedIndex][selType.node().selectedIndex == 0 ? 'export_data' : 'import_data'], root.append("div"), gdpMap, config, selType.node().selectedIndex);
+        ShowGraph(data[selYear.node().selectedIndex][selType.node().selectedIndex == 0 ? 'export_data' : 'import_data'], root, gdpMap, config, selType.node().selectedIndex);
     }
 
     selYear.on("change", showGraph);
