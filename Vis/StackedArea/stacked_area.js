@@ -155,9 +155,9 @@ function ProcessData(data)
     return fr;
 }
 
-export async function Run(config)
+export async function Run(config, folder)
 {
-    const data = ProcessData(await d3.json("./totalonly.json"));
+    const data = ProcessData(await d3.json(folder + "totalonly.json"));
     console.log(data);
 
     ShowGraph(data, config)

@@ -35,6 +35,10 @@
             <h2 style="font-size: 56px; margin-top: 25px;">Trade Network</h2>
             <div id="network_vis"></div>
         </div>
+        <div class="fullpage" style="display: flex; flex-direction: column; align-items: center;">
+            <h2 style="font-size: 56px; margin-top: 25px; position: absolute;">Events affect on Trade</h2>
+            <div id="timeline_vis"></div>
+        </div>
 
         <script src="./src/index.js"></script>
         <script type="module">
@@ -55,6 +59,15 @@
                 width: 1000,
                 height: 1000 
             }, "./DependenceVis/");
+        </script>
+        <script type="module">
+            import { Run } from "./StackedArea/stacked_area.js";
+
+            Run({
+                root: document.querySelector("#timeline_vis"),
+                width: $(window).width(), // window.screen.width,
+                height: $(window).height(), // window.screen.height
+            }, "./StackedArea/");
         </script>
     </body>
 </html>
