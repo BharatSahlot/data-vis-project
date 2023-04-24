@@ -143,13 +143,13 @@ function ShowGraph(data, root, gdpMap, config)
     }
 }
 
-export async function Run(config)
+export async function Run(config, folder)
 {
     const root = d3.select(config.root);
 
-    const data = await d3.json("./dependence.json");
+    const data = await d3.json(folder + "dependence.json");
 
-    const gdpData = await d3.csv("./gdp.csv");
+    const gdpData = await d3.csv(folder + "gdp.csv");
 
     const selYear = root.append("select")
     .attr("name", "dep_years")
