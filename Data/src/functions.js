@@ -31,8 +31,9 @@ export async function Download(country_code, year, product, isExport = true, sto
         });
         if(response.status != 200)
         {
+            fs.writeFileSync(fileName, JSON.stringify(null));
             console.log("Error in request")
-            return;
+            return null;
         }
         await pipeline(response.data, fs.createWriteStream(fileName));
     }
