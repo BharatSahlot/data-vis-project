@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        .choro_countries {
+            fill: none;
+            stroke: #fff;
+            stroke-linejoin: round;
+        }
+
+        .choro_tooltip {
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-color: white;
+            border-style: solid;
+            border-width: 3px;
+            background-color: black;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 15px;
+            margin: 5px;
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body style="background-color: black;color:white">
+    <form style="color: beige;">
+        <label for="importExport">Import/Export:</label>
+        <select id="importExport" name="importExport">
+            <option value="1">Import</option>
+            <option value="2">Export</option>
+        </select>
+    </form>
+    <form style="color: beige;">
+        <label for="selectYear">selectYear:</label>
+        <select id="selectYear" name="selectYear">
+        </select>
+    </form>
+    <div id="choro"></div>
+    <div id="tooltip" class="choro_tooltip"></div>
+    <script type="module">
+        import { Run } from "./choropleth.js"
+
+        Run({
+            width: 960,
+            height: 600,
+            root: document.querySelector("#choro")
+        });
+    </script>
+</body>
+
+</html>
