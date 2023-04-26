@@ -5,13 +5,13 @@ export async function Run(config, folder){
 
     // Create the label element
     const label = document.createElement('label');
-    label.setAttribute('for', 'cicularSelectYear');
+    label.setAttribute('for', 'selectYear');
     label.textContent = 'Select year:';
 
     // Create the select element
     const select = document.createElement('select');
-    select.setAttribute('id', 'cicularSelectYear');
-    select.setAttribute('name', 'cicularSelectYear');
+    select.setAttribute('id', 'selectYear');
+    select.setAttribute('name', 'selectYear');
 
     // Create the option elements
     for (let i = 2008; i <= 2019; i++) {
@@ -29,19 +29,19 @@ export async function Run(config, folder){
     //document.body.appendChild(form);
     const main = d3.select(config.root);
     main.node().appendChild(form);
-
     const svg = main.append("svg")
         .attr("width", config.width )
         .attr("height", config.height );
 
-    const yearOfStudySelect = document.getElementById("cicularSelectYear");
+    const yearOfStudySelect = document.getElementById("selectYear");
 
     const updateGraph = async () => {
         svg.node().innerHTML = "";
 
         const selectedValue=yearOfStudySelect.value;
 
-        console.log(selectedValue)
+        console.log(selectedValue);
+
         let margin = 20,
             diameter = +svg.attr("width"),
             g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
@@ -106,7 +106,7 @@ export async function Run(config, folder){
         function zoom(d, event) {
             var focus0 = focus; focus = d;
 
-            var transition = d3.transition()
+            var transition = svg.transition()
                 .duration(event.altKey ? 7500 : 750)
                 .tween("zoom", function (d) {
                     var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
@@ -114,7 +114,7 @@ export async function Run(config, folder){
                 });
 
             transition.selectAll("text")
-                .filter(function (_) { return d.parent === focus || this.style.display === "inline"; })
+                .filter(function (d) { return d.parent === focus || this.style.display === "inline"; })
                 .style("fill-opacity", function (d) { return d.parent === focus ? 1 : 0; })
                 .on("start", function (d) { if (d.parent === focus) this.style.display = "inline"; })
                 .on("end", function (d) { if (d.parent !== focus) this.style.display = "none"; });
@@ -126,6 +126,7 @@ export async function Run(config, folder){
             circle.attr("r", function (d) { return d.r * k; });
         }
     };
+
     yearOfStudySelect.addEventListener("change", updateGraph);
     updateGraph();
 }
