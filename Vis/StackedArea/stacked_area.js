@@ -357,22 +357,26 @@ function ShowGraph(data, config)
         const el = d3.select(`#S1_area_${cnt.si}`);
         paths.push(el);
 
-        el.on("mouseover", (_) => {
+        const mouseover = (_) => {
             for(const path of paths)
             {
                 path.attr("opacity", 0.1)
             }
             el.attr("opacity", 1);
-        });
+        };
 
-        el.on("mouseout", (_) => {
+        const mouseout = (_) => {
             let i = 0;
             for(const path of paths)
             {
                 path.attr("opacity", 0.5 + 0.3 * (1 - (i / data.length)))
                 i++;
             }
-        });
+        };
+
+
+        el.on("mouseover", mouseover);
+        el.on("mouseout", mouseout);
 
         for(let i = 0; i < cnt.values.length; i++)
         {
@@ -414,7 +418,17 @@ function ShowGraph(data, config)
             .attr("x", 15 + 3.5 + 10)
             .attr("y", labelOffsetY + 5 + 25 * cnt.si)
             .style("fill", "gray")
-            .text(cnt.country);
+            .text(cnt.country)
+            .style("pointer-events", "none")
+
+        svg.append("rect")
+            .attr("x", 15 + 3.5 + 10)
+            .attr("y", labelOffsetY + 5 + 25 * cnt.si)
+            .attr("height", 50)
+            .attr("width", 150)
+            .style("fill", "black")
+            .on("mouseover", mouseover)
+            .on("mouseout", mouseout);
     }
 
     AddH1N1Info(svg, xScale, yScale, config.height * 0.3);
