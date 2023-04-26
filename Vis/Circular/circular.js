@@ -1,5 +1,25 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
+const products = [
+    "Animal",
+    "Vegetable",
+    "Food Products",
+    "Minerals",
+    "Fuels",
+    "Chemicals",
+    "Plastic or Rubber",
+    "Hides and Skins",
+    "Wood",
+    "Textiles and Clothing",
+    "Footwear",
+    "Stone and Glass",
+    "Metals",
+    "Mach and Elec",
+    "Transportation",
+    "Miscellaneous",
+    "All Products"
+];
+
 export async function Run(config, folder){
     const form = document.createElement('form');
 
@@ -58,6 +78,15 @@ export async function Run(config, folder){
             .padding(2);
 
         let root = await d3.json(folder+"continents2.json");
+        for(const ic in root.children)
+        {
+            for(const ir in root.children[ic].children)
+            {
+                root.children[ic].children[ir].children.splice(-1);
+            }
+        }
+
+        var productColor = d3.interpolateSpectral;
 
         root = d3.hierarchy(root)
             .sum(function (d) {
@@ -85,6 +114,7 @@ export async function Run(config, folder){
             .enter().append("circle")
             .attr("class", function (d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
             .style("fill", function (d) { return d.children ? color(d.depth) : null; })
+            // .style("fill", function (d) { return d.children ? color(d.depth) : productColor(products.indexOf(d.data.name) / products.length); })
             .on("click", function (event, d) { if (focus !== d) zoom(d, event), event.stopPropagation(); });
 
         var text = g.selectAll("text")
