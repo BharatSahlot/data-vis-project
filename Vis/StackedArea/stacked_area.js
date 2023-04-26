@@ -334,9 +334,11 @@ function ShowGraph(data, config)
         .style("fill", "lightgray")
         .text("Countries");
 
+    const paths = [];
+
     for(const cnt of data)
     {
-        const col = color(0.1 + 0.9 * (cnt.si / data.length));
+        const col = color(0.2 + 0.8 * (cnt.si / data.length));
         let ele = svg
             .append("path")
             .datum(cnt.values)
@@ -351,6 +353,26 @@ function ShowGraph(data, config)
                 .y0(yScale(0))
                 .y1(yScale(0))
             );
+
+        const el = d3.select(`#S1_area_${cnt.si}`);
+        paths.push(el);
+
+        el.on("mouseover", (_) => {
+            for(const path of paths)
+            {
+                path.attr("opacity", 0.1)
+            }
+            el.attr("opacity", 1);
+        });
+
+        el.on("mouseout", (_) => {
+            let i = 0;
+            for(const path of paths)
+            {
+                path.attr("opacity", 0.5 + 0.3 * (1 - (i / data.length)))
+                i++;
+            }
+        });
 
         for(let i = 0; i < cnt.values.length; i++)
         {

@@ -13,6 +13,10 @@ html, body {
     height: 100%;
 }
 
+.qtip-dark {
+    pointer-events:none;
+}
+
 h1, h2, p, h3 {
     margin: 0 0;
 }
