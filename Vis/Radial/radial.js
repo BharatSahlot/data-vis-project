@@ -101,6 +101,7 @@ function ShowGraph(g, config, type, folder)
             .attr("stroke", "#000");
 
         label.append("text")
+            .attr("fill", "white")
             .attr("transform", function (d) { return (x(d.migrantRemittanceInflows) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI ? "rotate(360)translate(0,16)" : "rotate(180)translate(0,-9)"; })
             .text(function (d) { return d.migrantRemittanceInflows; });
 
@@ -114,25 +115,27 @@ function ShowGraph(g, config, type, folder)
 
         yTick.append("circle")
             .attr("fill", "none")
-            .attr("stroke", "#000")
+            .attr("stroke", "gray")
             .attr("r", y);
 
         yTick.append("text")
             .attr("y", function (d) { return -y(d); })
             .attr("dy", "0.35em")
-            .attr("fill", "none")
-            .attr("stroke", "#fff")
-            .attr("stroke-width", 5)
+            .attr("fill", "white")
+            // .attr("stroke", "#fff")
+            // .attr("stroke-width", 5)
             .text(y.tickFormat(5, "s"));
 
-        yTick.append("text")
-            .attr("y", function (d) { return -y(d); })
-            .attr("dy", "0.35em")
-            .text(y.tickFormat(5, "s"));
+        // yTick.append("text")
+        //     .attr("y", function (d) { return -y(d); })
+        //     .attr("dy", "0.35em")
+        //     // .attr("fill", "white")
+        //     .text(y.tickFormat(5, "s"));
 
         yAxis.append("text")
             .attr("y", function (d) { return -y(y.ticks(5).pop()); })
             .attr("dy", "-1em")
+            .attr("fill", "white")
             .text(`${type}-remittance`);
 
         var legend = g.append("g")
@@ -150,6 +153,7 @@ function ShowGraph(g, config, type, folder)
             .attr("x", 24)
             .attr("y", 9)
             .attr("dy", "0.35em")
+            .attr("fill", "white")
             .text(function (d) { return d; });
     });  
 }
@@ -174,7 +178,7 @@ export async function Run(config, folder) {
 
     const height = config.height;
     
-    const innerRadius = 180;
+    const innerRadius = 150;
 
     const outerRadius = Math.min(width, height) / 2;
 

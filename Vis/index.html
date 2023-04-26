@@ -36,6 +36,10 @@
             <div id="choro"></div>
         </div>
         <div class="fullpage" style="display: flex; flex-direction: column; align-items: center;">
+            <h2 style="font-size: 56px; margin-top: 25px; margin-bottom: 25px;">Inflow/Outflow Remittance</h2>
+            <div id="inoutflow"></div>
+        </div>
+        <div class="fullpage" style="display: flex; flex-direction: column; align-items: center;">
             <h2 style="font-size: 56px; margin-top: 25px;">Trade Network</h2>
             <div id="network_vis"></div>
         </div>
@@ -81,6 +85,15 @@
                 height: 800,
                 root: document.querySelector("#choro")
             }, "./Choropleth/");
+        </script>
+        <script type="module">
+            import { Run } from "./Radial/radial.js"
+
+            Run({
+                width: 700,
+                height: 800,
+                root: document.querySelector("#inoutflow")
+            }, "./Radial/");
         </script>
     </body>
 </html>
