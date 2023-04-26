@@ -257,7 +257,7 @@ d3.csv("./Scatter/indiaTradeGdpRatio.csv",
 
         function updateChart() {
 
-            extent = d3.event.selection
+            const extent = d3.event.selection
 
             // If no selection, back to initial coordinate. Otherwise, update X axis domain
             if (!extent) {

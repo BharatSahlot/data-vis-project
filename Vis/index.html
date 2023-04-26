@@ -45,6 +45,14 @@
             <div id="scatter_viz"></div>
         </div>
         <div class="fullpage" style="display: flex; flex-direction: column; align-items: center;">
+            <h2 style="font-size: 56px; margin-top: 25px; margin-bottom: 25px;">Sector wise trade distribution over the years</h2>
+            <div>
+                <label for="countrySelect">Select a country:</label>
+                <select id="countrySelect" style="width: 150px; height: 40px"></select>
+            </div>
+            <div id="stackedchart"></div>
+        </div>
+        <div class="fullpage" style="display: flex; flex-direction: column; align-items: center;">
             <h2 style="font-size: 56px; margin-top: 25px;">Trade Network</h2>
             <div id="network_vis"></div>
         </div>
@@ -54,10 +62,9 @@
         </div>
 
         <script src="./src/index.js"></script>
-        <script src="./Scatter/scatter.js">
-        </script>
-        <script src="./Choropleth/choropleth.js">
-        </script>
+        <script type="module" src="./Scatter/scatter.js"></script>
+        <script type="module" src="./Choropleth/choropleth.js"></script>
+        <script type="module" src="./StackedBar/stackedbar.js"></script>
         <script type="module">
             import { Run } from "./DependenceVis/charge.js";
 
@@ -73,8 +80,8 @@
 
             Run({
                 root: document.querySelector("#network_vis"),
-                width: 1000,
-                height: 1000 
+                width: 750,
+                height: 750
             }, "./DependenceVis/");
         </script>
         <script type="module">
@@ -86,15 +93,6 @@
                 height: $(window).height(), // window.screen.height
             }, "./StackedArea/");
         </script>
-        <!-- <script type="module"> -->
-        <!--     import { Run } from "./Choropleth/choropleth.js" -->
-        <!---->
-        <!--     Run({ -->
-        <!--         width: 1280, -->
-        <!--         height: 800, -->
-        <!--         root: document.querySelector("#choro") -->
-        <!--     }, "./Choropleth/"); -->
-        <!-- </script> -->
         <script type="module">
             import { Run } from "./Radial/radial.js"
 
