@@ -103,6 +103,7 @@ function ShowGraph(edges, root, gdpMap, config, direction)
         .data(links)
         .join("line")
         .attr("stroke-width", d => d.width)
+        // .attr("stroke-width", 2)
 
     let hovered = null;
 
@@ -147,9 +148,9 @@ function ShowGraph(edges, root, gdpMap, config, direction)
             .attr("y2", d => d.target.y)
             .attr("stroke", d => nodeColor[d.target.id].formatHex())
             .attr("style", d => {
-                if(hovered == null || (direction == 0 && hovered != d.source) || (direction == 1 && hovered != d.target)) return "";
+                // if(hovered == null || (direction == 0 && hovered != d.source) || (direction == 1 && hovered != d.target)) return "";
 
-                return "stroke-dasharray: 10, 4"
+                return `stroke-dasharray: 10, ${d.width >= 3 ? 1.5 : d.width >= 2 ? 3 : 5}`
             })
             .attr("stroke-opacity", d => {
                 if(hovered == null) return max(0.3, d.width / 5);
