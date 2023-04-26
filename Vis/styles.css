@@ -45,3 +45,25 @@ select {
     width: 100px;
     display: none;
 }
+
+.radial_tooltip {
+    position: absolute;
+    background-color: #98abc5;
+    color: black;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.scatter_tooltip {
+    background-color: #2a1e5c;
+    color: #aaff01;
+    padding: 5px;
+    font-size: 15px;
+}
+
+.scatter_tooltip2 {
+    background-color: #2a1e5c;
+    color: #aaff01;
+    padding: 5px;
+    font-size: 15px;
+}

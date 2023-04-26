@@ -1,8 +1,8 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@4/+esm";
-import { geoPath, geoNaturalEarth1 } from "https://cdn.jsdelivr.net/npm/d3-geo@2/+esm";
-import { schemeGnBu } from "https://cdn.skypack.dev/d3-scale-chromatic@1";
+// import * as d3 from "https://cdn.jsdelivr.net/npm/d3@4/+esm";
+// import { geoPath, geoNaturalEarth1 } from "https://cdn.jsdelivr.net/npm/d3-geo@2/+esm";
+// import { schemeGnBu } from "https://cdn.skypack.dev/d3-scale-chromatic@1";
 
-export async function Run(config, folder) {
+async function Run(config, folder) {
 
     const width = config.width;
     const height = config.height;
@@ -32,15 +32,15 @@ export async function Run(config, folder) {
 
     // Map and projection
     var path = d3.geoPath();
-    var projection = geoNaturalEarth1()
+    var projection = d3.geoNaturalEarth1()
         .scale(width / 2 / Math.PI)
         .translate([width / 2, height / 2])
-    var path = geoPath()
+    var path = d3.geoPath()
         .projection(projection);
 
     // Data and color scale
     var data = d3.map();
-    var colorScheme = schemeGnBu[6];
+    var colorScheme = d3.schemeGnBu[6];
     colorScheme.unshift("#eee")
     var colorScale = d3.scaleThreshold()
         .domain([1, 6, 11, 26, 101, 1001])
@@ -74,6 +74,17 @@ export async function Run(config, folder) {
             .attr("cy", 15 + 15 * i)
             .attr("r", 7)
             .attr("fill", colorScale(labelValue[i]))
+    }
+
+    var zoom = d3.zoom()
+        .scaleExtent([1, 8])
+        .on("zoom", zoomed);
+
+    svg.call(zoom);
+
+    function zoomed() {
+        svg.selectAll(".choro_countries")
+            .attr("transform", d3.event.transform);
     }
 
     const UpdateGraph = () => {
@@ -135,3 +146,9 @@ export async function Run(config, folder) {
 
     UpdateGraph();
 }
+
+Run({
+    width: 960,
+    height: 600,
+    root: document.querySelector("#choro")
+}, "./Choropleth/");
