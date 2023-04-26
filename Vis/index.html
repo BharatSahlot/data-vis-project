@@ -53,6 +53,10 @@
             <div id="stackedchart"></div>
         </div>
         <div class="fullpage" style="display: flex; flex-direction: column; align-items: center;">
+            <h2 style="font-size: 56px; margin-top: 25px; margin-bottom: 25px;">Circular Plot</h2>
+            <div id="circular"></div>
+        </div>
+        <div class="fullpage" style="display: flex; flex-direction: column; align-items: center;">
             <h2 style="font-size: 56px; margin-top: 25px;">Trade Network</h2>
             <div id="network_vis"></div>
         </div>
@@ -73,6 +77,16 @@
                 width: 1000,
                 height: 750 
             }, "./DependenceVis/");
+        </script>
+
+        <script type="module">
+            import { Run } from "./Circular/circular.js";
+
+            Run({
+                root: document.querySelector("#circular"),
+                width: 750,
+                height: 750 
+            }, "./Circular/");
         </script>
 
         <script type="module">
