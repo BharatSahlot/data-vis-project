@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+
+<head>
+    <style>
+        .radial_tooltip {
+            position: absolute;
+            background-color: #98abc5;
+            color: black;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="radial"></div>
+    <script type="module">
+        import { Run } from "./radial.js";
+
+        Run({
+            root: document.querySelector("#radial"),
+            width: 860,
+            height: 860
+        }, "./");
+    </script>
+</body>
+</html>
