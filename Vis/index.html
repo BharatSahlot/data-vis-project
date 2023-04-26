@@ -32,6 +32,10 @@
             </div>
         </div>
         <div class="fullpage" style="display: flex; flex-direction: column; align-items: center;">
+            <h2 style="font-size: 56px; margin-top: 25px; margin-bottom: 25px;">India's Trade Relations</h2>
+            <div id="choro"></div>
+        </div>
+        <div class="fullpage" style="display: flex; flex-direction: column; align-items: center;">
             <h2 style="font-size: 56px; margin-top: 25px;">Trade Network</h2>
             <div id="network_vis"></div>
         </div>
@@ -68,6 +72,15 @@
                 width: $(window).width(), // window.screen.width,
                 height: $(window).height(), // window.screen.height
             }, "./StackedArea/");
+        </script>
+        <script type="module">
+            import { Run } from "./Choropleth/choropleth.js"
+
+            Run({
+                width: 1280,
+                height: 800,
+                root: document.querySelector("#choro")
+            }, "./Choropleth/");
         </script>
     </body>
 </html>
