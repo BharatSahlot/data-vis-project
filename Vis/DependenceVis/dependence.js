@@ -16,7 +16,7 @@ function shuffle(a) {
 
 function ProcessEdges(edges)
 {
-    edges = edges.filter(e => e.perc >= 0.1);
+    // edges = edges.filter(e => e.perc >= 0.01);
 
     let graph = {};
     for(const edge of edges)
@@ -37,7 +37,7 @@ function ProcessEdges(edges)
 }
 
 // data of a year
-function ShowGraph(edges, root, gdpMap, config, direction)
+function ShowGraph(edges, root, gdpMap, config, direction, highlight)
 {
     const processed = ProcessEdges(edges);
 
@@ -133,7 +133,8 @@ function ShowGraph(edges, root, gdpMap, config, direction)
 
     let offset = 0;
     setInterval(() => {
-        offset--;
+        if(direction == 0) offset--;
+        else offset++;
 
         link.attr("stroke-dashoffset", d => {
                 return offset * d.width / 5;
@@ -146,7 +147,7 @@ function ShowGraph(edges, root, gdpMap, config, direction)
             .attr("y1", d => d.source.y)
             .attr("x2", d => d.target.x)
             .attr("y2", d => d.target.y)
-            .attr("stroke", d => nodeColor[d.target.id].formatHex())
+            .attr("stroke", d => nodeColor[direction == 0 ? d.target.id : d.source.id].formatHex())
             .attr("style", d => {
                 // if(hovered == null || (direction == 0 && hovered != d.source) || (direction == 1 && hovered != d.target)) return "";
 
@@ -154,7 +155,8 @@ function ShowGraph(edges, root, gdpMap, config, direction)
             })
             .attr("stroke-opacity", d => {
                 if(hovered == null) return max(0.3, d.width / 5);
-                if((direction == 0 && hovered == d.source) || (direction == 1 && hovered == d.target)) return 1;
+                if((highlight == 0 && hovered == d.source) || (highlight == 1 && hovered == d.target)) return 1;
+                // if(hovered == d.source) return 1;
                 return max(0.1, d.width / 7);
             });
 
@@ -223,6 +225,14 @@ export async function Run(config, folder)
         .attr("value", "import")
         .text("Import");
 
+    selType.append("option")
+        .attr("value", "inverted_export")
+        .text("Inverted Export");
+
+    selType.append("option")
+        .attr("value", "inverted_import")
+        .text("Inverted Import");
+
     const showGraph = () => {
         if(cont.select("svg"))
             cont.select("svg").remove();
@@ -234,7 +244,9 @@ export async function Run(config, folder)
             gdpMap[row.Code] = parseFloat(row[selYear.node().selectedIndex + 1998]);
         }
 
-        ShowGraph(data[selYear.node().selectedIndex][selType.node().selectedIndex == 0 ? 'export_data' : 'export_data'], cont, gdpMap, config, selType.node().selectedIndex);
+        const si = selType.node().selectedIndex;
+        const dtt = si == 0 || si == 1 ? 'export_data' : 'import_data';
+        ShowGraph(data[selYear.node().selectedIndex][dtt], cont, gdpMap, config, si == 0 || si == 2 ? 0 : 1, si == 0 || si == 1 ? 0 : 1);
     }
 
     selYear.on("change", showGraph);

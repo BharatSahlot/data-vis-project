@@ -472,7 +472,7 @@ function ProcessData(data)
 
             res[cnt.country].push({
                 year: year.year,
-                value: cnt.export
+                value: cnt.export + cnt.import
             });
         }
     }

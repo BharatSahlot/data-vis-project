@@ -21,6 +21,17 @@ for(const row of gdpFileData)
 
 let downloaded = 0;
 
+function MaxGDP(year)
+{
+    let mx = 0;
+    for(const country of countries)
+    {
+        if(gdpData[country.alpha3] == undefined || gdpData[country.alpha3][year] == undefined) continue;
+        if(gdpData[country.alpha3][year] > mx) mx = gdpData[country.alpha3][year];
+    }
+    return mx;
+}
+
 async function DownloadYear(year)
 {
     const data = {
@@ -50,6 +61,7 @@ async function DownloadYear(year)
         // const cd = await DownloadForProduct(country.alpha3, year, year, PRODUCTS[PRODUCTS.length - 1], true);
         const import_data = await Download(country.alpha3, year, PRODUCTS[PRODUCTS.length - 1].code, false, true);
 
+        const edges = 3 + Math.round(20 * (gdpData[country.alpha3][year] / MaxGDP(year)));
         let to_push = [];
         for(const key of Object.keys(import_data))
         {
@@ -74,7 +86,7 @@ async function DownloadYear(year)
             /* if(d.perc >= 0.1) */ to_push.push(d);
         }
         to_push.sort((a, b) => b.value - a.value);
-        to_push = to_push.slice(0, to_push.length < 5 ? to_push.length : 5);
+        to_push = to_push.slice(0, to_push.length < edges ? to_push.length : edges);
         for(const x of to_push) data.import_data.push(x);
 
 
@@ -103,7 +115,7 @@ async function DownloadYear(year)
             /* if(d.perc >= 0.1) */ to_push.push(d);
         }
         to_push.sort((a, b) => b.value - a.value);
-        to_push = to_push.slice(0, to_push.length < 5 ? to_push.length : 5);
+        to_push = to_push.slice(0, to_push.length < edges ? to_push.length : edges);
         for(const x of to_push) data.export_data.push(x);
 
         downloaded++;
