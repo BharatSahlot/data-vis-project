@@ -58,6 +58,9 @@ d3.csv("./Scatter/indiaTradeGdpRatio.csv",
         var y1 = d3.scaleLinear()
             .domain(d3.extent(data, function (d) { return d.diff; }))
             .range([height, 0]);
+        var y2 = d3.scaleLinear()
+            .domain(d3.extent(data, function (d) { return d.diff; }))
+            .range([height, 0]);
         
         let yAxis = svg1.append("g")
             .call(d3.axisLeft(y1))
@@ -274,7 +277,8 @@ d3.csv("./Scatter/indiaTradeGdpRatio.csv",
             });
 
             // Get the extent of the filtered dataset on the y-axis
-            var yExtent = d3.extent(newData, function (d) { return d.diff; });
+            var yExtent = [0,d3.max(newData, function (d) { return d.diff; })];
+            console.log(yExtent)
             var yExtent1 = d3.extent(newData, function (d) { return Number(d.value); });
 
             // Update the y-axis scale domain with the new extent
@@ -336,7 +340,7 @@ d3.csv("./Scatter/indiaTradeGdpRatio.csv",
             });
 
             // Get the extent of the filtered dataset on the y-axis
-            var yExtent = d3.extent(newData, function (d) { return d.diff; });
+            var yExtent = [0,d3.max(newData, function (d) { return d.diff; })];
             var yExtent1 = d3.extent(newData, function (d) { return Number(d.value); });
             console.log(yExtent)
             console.log(yExtent1)
