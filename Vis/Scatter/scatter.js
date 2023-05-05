@@ -291,6 +291,20 @@ d3.csv("./Scatter/indiaTradeGdpRatio.csv",
             yAxis.transition().duration(1000).call(d3.axisLeft(y1));
             yAxis2.transition().duration(1000).call(d3.axisLeft(y))
 
+            xAxis.select(".domain").attr("stroke", "white");
+            xAxis.selectAll("text").attr("fill", "white");
+            xAxis.selectAll("line").attr("stroke", "white");
+            yAxis.select(".domain").attr("stroke", "white");
+            yAxis.selectAll("text").attr("fill", "white");
+            yAxis.selectAll("line").attr("stroke", "white");
+
+            xAxis2.select(".domain").attr("stroke", "white");
+            xAxis2.selectAll("text").attr("fill", "white");
+            xAxis2.selectAll("line").attr("stroke", "white");
+            yAxis2.select(".domain").attr("stroke", "white");
+            yAxis2.selectAll("text").attr("fill", "white");
+            yAxis2.selectAll("line").attr("stroke", "white");
+
             // Update the scatterplot circles
             scatter.selectAll("circle")
                 .transition().duration(1000)
