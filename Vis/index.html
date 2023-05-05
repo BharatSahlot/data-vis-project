@@ -1,119 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Dataquest - Data Visualization Project</title>
 
-        <script src="https://d3js.org/d3.v7.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dataquest - Data Visualization Project</title>
 
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 
-        <script src="https://cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.js"></script>
-        <link href="https://cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
 
-        <script src="https://d3js.org/d3.v4.js"></script>
-        <link href="styles.css" rel="stylesheet">
-    </head>
-    <body>
-        <div class="fullpage" style="display: flex; align-items: center; justify-content: space-around; padding: 0 50px;">
-            <div>
-                <!-- left -->
-                <div style="display: flex; align-items: end;">
-                    <p style="font-size: 90px; color: red; margin-right: 10px; line-height: 90px;">70%</p>
-                    <p style="margin-bottom: 5px">Increase in trade<br>volume since 1998</p>
-                </div>
-                <h1 style="font-size: 72px">Data Vis in Trading</h1>
-                <h3 style="font-size: 30px; color: gray;">Lots of data, need visualizations<br> to study properly</h3>
-            </div>
-            <div>
-                <!-- right -->
-                <div id="title_vis"></div>
-                <p style="text-align: center; color: gray;">Force graph for trade behaviour</p>
-            </div>
-        </div>
-        <div class="fullpage" style="display: flex; align-items: center; justify-content: space-around; padding: 0 50px;">
-            <div>
-                <!-- left -->
-                <div id="circular"></div>
-                <p style="text-align: center; color: gray;">Circular zoomable chart</p>
-            </div>
-            <div>
-                <!-- right -->
-                <h1 style="font-size: 50px">Regionwise and countrywise distributions</h1>
-                <h3 style="font-size: 30px; color: gray;">This chart shows the relative contribution of each country in a region's trade click the circle corresponding to any particular country shows the product wise distribution of that country's trade.Moreover the user can choose if he wants to see the import or export value</h3>
-            </div>
-        </div>
-        <div class="fullpage" style="display: flex; flex-direction: column; align-items: center;">
-            <h2 style="font-size: 56px; margin-top: 25px; position: absolute;">Effect of different events on Trade</h2>
-            <div id="timeline_vis"></div>
-            <h3 style="font-size: 30px;margin-top: 25px; color: gray;">This Graph portrays the changes caused in different countries’ overall trade due major world events.</h3>
-        </div>
-        <div class="fullpage" style="display: flex; align-items: center; justify-content: space-around; padding: 0 50px;">
-            <div>
-                <!-- left -->
-                <h1 style="font-size: 50px">Inflow/Outflow Remittance</h1>
-                <h3 style="font-size: 30px; color: gray;">Remittances are money transfers made by individuals living and working abroad to their home countries. To make comparision simple sort option has been provided which sort the bars of the circular bar chart</h3>
-                
-            </div>
-            <div>
-                <!-- right -->
-                <div id="inoutflow"></div>
-                <p style="text-align: center; color: gray;">Circular Bar Plot</p>
-            </div>
-        </div>
-        <div class="fullpage" style="display: flex; align-items: center; justify-content: space-around; padding: 0 50px;">
-            <div>
-                <!-- left -->
-                <div id="network_vis"></div>
-                <p style="text-align: center; color: gray;">Force chart</p>
-                
-            </div>
-            <div>
-                <!-- right -->
-                <h1 style="font-size: 50px">Trade Network and Interdependence</h1>
-                <h3 style="font-size: 30px; color: gray;">Since the trade graph is too big, we only display some selected edges. The graph has option for selecting the year and for selecting between export/import. GDP of a country is represented by the node size. Trade value of an edge is represented by its thickness and gaps</h3>
-            </div>
-        </div>
+    <script src="https://cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/qtip2/3.0.3/jquery.qtip.min.css" rel="stylesheet">
 
-        <div class="fullpage" style="display: flex; flex-direction: column; align-items: center;">
-            <h2 style="font-size: 56px; margin-top: 25px; margin-bottom: 25px;">Sector wise trade distribution over the years</h2>
-            <div>
-                <label for="countrySelect">Select a country:</label>
-                <select id="countrySelect" style="width: 150px; height: 40px"></select>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <section id="section1" class="fullpage"
+        style="display: flex; align-items: center; justify-content: space-around; padding: 0 50px;">
+        <div>
+            <!-- left -->
+            <div style="display: flex; align-items: end;">
+                <p style="font-size: 90px; color: red; margin-right: 10px; line-height: 90px;">70%</p>
+                <p style="margin-bottom: 5px">Increase in trade<br>volume since 1998</p>
             </div>
-            <div id="stackedchart"></div>
-            <h3 style="font-size: 30px;margin-top: 25px; color: gray;">This chart shows the sectorwise distribution of trade over the years for all the countries in the world. In order to focus on the trade of any one sector the user can hover on the corresponding sector's legend.</h3>
-<br>
+            <h1 style="font-size: 72px">Data Vis in Trading</h1>
+            <h3 style="font-size: 30px; color: gray;">Lots of data, need visualizations<br> to study properly</h3>
         </div>
+        <div>
+            <!-- right -->
+            <div id="title_vis"></div>
+            <p style="text-align: center; color: gray;">Force graph for trade behaviour</p>
+        </div>
+        <a href="#section2" style="color: white;"><span></span>Scroll</a>
+    </section>
+    <section id="section2" class="fullpage"
+        style="display: flex; align-items: center; justify-content: space-around; padding: 0 50px;">
+        <div>
+            <!-- left -->
+            <div id="circular"></div>
+            <p style="text-align: center; color: gray;">Circular zoomable chart</p>
+        </div>
+        <div>
+            <!-- right -->
+            <h1 style="font-size: 50px">Regionwise and countrywise distributions</h1>
+            <h3 style="font-size: 30px; color: gray;">This chart shows the relative contribution of each country in a
+                region's trade click the circle corresponding to any particular country shows the product wise
+                distribution of that country's trade.Moreover the user can choose if he wants to see the import or
+                export value</h3>
+        </div>
+        <a href="#section3" style="color: white;"><span></span>Scroll</a>
+    </section>
+    <section id="section3" class="fullpage" style="display: flex; flex-direction: column; align-items: center;">
+        <h2 style="font-size: 56px; margin-top: 25px; position: absolute;">Effect of different events on Trade</h2>
+        <div id="timeline_vis"></div>
+        <h3 style="font-size: 30px;margin-top: 25px; color: gray;">This Graph portrays the changes caused in different
+            countries’ overall trade due major world events.</h3>
+            <a href="#section4" style="color: white;"><span></span>Scroll</a>
+    </section>
+    <section id="section4" class="fullpage"
+        style="display: flex; align-items: center; justify-content: space-around; padding: 0 50px;">
+        <div>
+            <!-- left -->
+            <h1 style="font-size: 50px">Inflow/Outflow Remittance</h1>
+            <h3 style="font-size: 30px; color: gray;">Remittances are money transfers made by individuals living and
+                working abroad to their home countries. To make comparision simple sort option has been provided which
+                sort the bars of the circular bar chart</h3>
+
+        </div>
+        <div>
+            <!-- right -->
+            <div id="inoutflow"></div>
+            <p style="text-align: center; color: gray;">Circular Bar Plot</p>
+        </div>
+        <a href="#section5" style="color: white;"><span></span>Scroll</a>
+    </section>
+    <section id="section5" class="fullpage"
+        style="display: flex; align-items: center; justify-content: space-around; padding: 0 50px;">
+        <div>
+            <!-- left -->
+            <div id="network_vis"></div>
+            <p style="text-align: center; color: gray;">Force chart</p>
+
+        </div>
+        <div>
+            <!-- right -->
+            <h1 style="font-size: 50px">Trade Network and Interdependence</h1>
+            <h3 style="font-size: 30px; color: gray;">Since the trade graph is too big, we only display some selected
+                edges. The graph has option for selecting the year and for selecting between export/import. GDP of a
+                country is represented by the node size. Trade value of an edge is represented by its thickness and gaps
+            </h3>
+        </div>
+        <a href="#section6" style="color: white;"><span></span>Scroll</a>
+    </section>
+
+    <section id="section6" class="fullpage" style="display: flex; flex-direction: column; align-items: center;">
+        <h2 style="font-size: 56px; margin-top: 25px; margin-bottom: 25px;">Sector wise trade distribution over the
+            years</h2>
+        <div>
+            <label for="countrySelect">Select a country:</label>
+            <select id="countrySelect" style="width: 150px; height: 40px"></select>
+        </div>
+        <div id="stackedchart"></div>
+        <h3 style="font-size: 30px;margin-top: 25px; color: gray;">This chart shows the sectorwise distribution of trade
+            over the years for all the countries in the world. In order to focus on the trade of any one sector the user
+            can hover on the corresponding sector's legend.</h3>
+        <br>
+        <a href="#section7" style="color: white;"><span></span>Scroll</a>
+        </section>
         <div style=" display: flex; align-items: center; justify-content: space-around; padding: 0 50px;">
-            <h1 style= "font-size: 70px; margin-top: 130px; margin-bottom: 25px;">Indian Trade Analysis</h1>  
+            <h1 style="font-size: 70px; margin-top: 130px; margin-bottom: 25px;">Indian Trade Analysis</h1>
         </div>
-        <div class="fullpage" style="display: flex; align-items: center; justify-content: space-around; padding: 0 50px;">
+        <section id="section7" class="fullpage"
+            style="display: flex; align-items: center; justify-content: space-around; padding: 0 50px;">
             <div>
                 <!-- left -->
                 <div id="choro"></div>
                 <p style="text-align: center; color: gray;">Choropleth Graph</p>
-                
+
             </div>
             <div>
                 <!-- right -->
                 <h1 style="font-size: 50px">Trade Relations</h1>
-                <h3 style="font-size: 30px; color: gray;">This zoomable Choropleth graph shows the Export/Import values(in millions) with India over the years</h3>
+                <h3 style="font-size: 30px; color: gray;">This zoomable Choropleth graph shows the Export/Import
+                    values(in millions) with India over the years</h3>
             </div>
-        </div>
-        <div class="fullpage" style="display: flex; align-items: center; justify-content: space-around; padding: 0 50px;">
+            <a href="#section8" style="color: white;"><span></span>Scroll</a>
+        </section>
+        <section id="section8" class="fullpage"
+            style="display: flex; align-items: center; justify-content: space-around; padding: 0 50px;">
             <div>
                 <!-- left -->
                 <h1 style="font-size: 50px">Trade GDP relation</h1>
-                <h3 style="font-size: 30px; margin-bottom: 350px; color: gray;">These zoomable charts show the relation between a country's overall trade and gdp.The scatter chart shows the trade by gdp percentage while the lollipop chart shows the annual change in the same</h3>
+                <h3 style="font-size: 30px; margin-bottom: 350px; color: gray;">These zoomable charts show the relation
+                    between a country's overall trade and gdp.The scatter chart shows the trade by gdp percentage while
+                    the lollipop chart shows the annual change in the same</h3>
             </div>
             <div>
                 <!-- right -->
                 <div id="scatter_viz"></div>
                 <p style="text-align: center; color: gray;">Linked lollipop and scatter chart</p>
             </div>
-        </div>
+            <a href="#section1" style="color: white;"><span></span>Scroll</a>
+        </section>
         <script src="./src/index.js"></script>
         <script type="module" src="./Scatter/scatter.js"></script>
         <script type="module" src="./Choropleth/choropleth.js"></script>
@@ -124,7 +155,7 @@
             Run({
                 root: document.querySelector("#title_vis"),
                 width: 1000,
-                height: 750 
+                height: 750
             }, "./DependenceVis/");
         </script>
 
@@ -134,7 +165,7 @@
             Run({
                 root: document.querySelector("#circular"),
                 width: 900,
-                height: 900 
+                height: 900
             }, "./Circular/");
         </script>
 
@@ -165,5 +196,6 @@
                 root: document.querySelector("#inoutflow")
             }, "./Radial/");
         </script>
-    </body>
+</body>
+
 </html>
