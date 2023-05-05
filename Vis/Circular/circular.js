@@ -60,17 +60,13 @@ export async function Run(config, folder){
 
         const selectedValue=yearOfStudySelect.value;
 
-        console.log(selectedValue);
-
         let margin = 20,
             diameter = +svg.attr("width"),
             g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 
-        console.log(svg);
-
-        var color = d3.scaleLinear()
+            var color = d3.scaleLinear()
             .domain([-1, 5])
-            .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+            .range(["hsl(210, 80%, 80%)", "hsl(300, 30%, 40%)"])
             .interpolate(d3.interpolateHcl);
 
         var pack = d3.pack()
@@ -104,6 +100,7 @@ export async function Run(config, folder){
                 //return d.export_data;
             })
             .sort(function (a, b) { return b.value - a.value; });
+            
 
         var focus = root,
             nodes = pack(root).descendants(),
@@ -112,7 +109,8 @@ export async function Run(config, folder){
         var circle = g.selectAll("circle")
             .data(nodes)
             .enter().append("circle")
-            .attr("class", function (d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
+            .attr("class", function (d) { 
+                return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
             .style("fill", function (d) { return d.children ? color(d.depth) : null; })
             // .style("fill", function (d) { return d.children ? color(d.depth) : productColor(products.indexOf(d.data.name) / products.length); })
             .on("click", function (event, d) { if (focus !== d) zoom(d, event), event.stopPropagation(); });
@@ -124,6 +122,10 @@ export async function Run(config, folder){
             .style("fill-opacity", function (d) { return d.parent === root ? 1 : 0; })
             .style("display", function (d) { return d.parent === root ? "inline" : "none"; })
             .text(function (d) { return d.data.name; });
+        circle.append("text")
+            .data(nodes)
+            .attr("dy", ".35em")
+            .style("text-anchor", "middle");
 
         var node = g.selectAll("circle,text");
 
