@@ -123,7 +123,7 @@ d3.csv("./Scatter/indiaTradeGdpRatio.csv",
             .attr("cx", function (d) { return x(d.date); })
             .attr("cy", function (d) { return y1(d.diff); })
             .attr("r", "4")
-            .style("fill", "blue")
+            .style("fill", "#B71DDE")
             .attr("stroke", "black")
             .on('mouseover', function (d, i) {
                 //console.log(d)
@@ -139,9 +139,9 @@ d3.csv("./Scatter/indiaTradeGdpRatio.csv",
             })
             .on("mouseout", function (d, i) {
                 d3.selectAll(".dot" + i)
-                    .style("fill", "blue");
+                    .style("fill", "#B71DDE");
                 d3.selectAll(".point" + i)
-                    .style("fill", "blue");
+                    .style("fill", "#B71DDE");
                 tooltip.style("visibility", "hidden");
                 tooltip2.style("visibility", "hidden");
             });
@@ -201,7 +201,7 @@ d3.csv("./Scatter/indiaTradeGdpRatio.csv",
                 return y(d.value)
             })
             .attr("r", 5)
-            .attr("fill", "blue")
+            .attr("fill", "#B71DDE")
             .attr("stroke", "black")
             .on('mouseover', function (d, i) {
                 //console.log(i)
@@ -217,9 +217,9 @@ d3.csv("./Scatter/indiaTradeGdpRatio.csv",
             })
             .on("mouseout", function (d, i) {
                 d3.selectAll(".dot" + i)
-                    .style("fill", "blue");
+                    .style("fill", "#B71DDE");
                 d3.selectAll(".point" + i)
-                    .style("fill", "blue");
+                    .style("fill", "#B71DDE");
                 tooltip2.style("visibility", "hidden");
             });
         // Add x-axis label for first graph
@@ -228,6 +228,7 @@ d3.csv("./Scatter/indiaTradeGdpRatio.csv",
                 "translate(" + (width / 2) + " ," +
                     (height + margin.top + 40) + ")")
             .style("text-anchor", "middle")
+            .style("fill","white")
             .text("Year");
 
         // Add y-axis label for first graph
@@ -237,6 +238,7 @@ d3.csv("./Scatter/indiaTradeGdpRatio.csv",
             .attr("x", 0 - (height / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
+            .style("fill","white")
             .text("Annual Change(%)");
         //Trade to GDP Ratio
         // Add x-axis label for second graph
@@ -245,6 +247,7 @@ d3.csv("./Scatter/indiaTradeGdpRatio.csv",
                 "translate(" + (width / 2) + " ," +
                     (height + margin.top + 40) + ")")
             .style("text-anchor", "middle")
+            .style("fill","white")
             .text("Year");
 
         // Add y-axis label for second graph
@@ -253,6 +256,7 @@ d3.csv("./Scatter/indiaTradeGdpRatio.csv",
             .attr("y", 0 - margin.left)
             .attr("x", 0 - (height / 2))
             .attr("dy", "1em")
+            .style("fill","white")
             .style("text-anchor", "middle")
             .text("Trade to GDP Ratio");
 

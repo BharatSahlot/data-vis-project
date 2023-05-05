@@ -40,7 +40,8 @@ async function Run(config, folder) {
 
     // Data and color scale
     var data = d3.map();
-    var colorScheme = d3.schemeGnBu[6];
+    var colorScheme = d3.schemeBuPu[6];
+    console.log(colorScheme)
     colorScheme.unshift("#eee")
     var colorScale = d3.scaleThreshold()
         .domain([1, 6, 11, 26, 101, 1001])

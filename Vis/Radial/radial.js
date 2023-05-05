@@ -5,6 +5,7 @@ function square(x) {
 }
 
 function radial() {
+    
     var linear = d3.scaleLinear();
 
     function scale(x) {
@@ -55,9 +56,9 @@ function ShowGraph(g, config, type, folder) {
 
     var y = radial()
         .range([config.innerRadius, config.outerRadius]);
-
+ 
     var z = d3.scaleOrdinal()
-        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+        .range(["#810f7c","#9ebcda","#8c96c6","#8856a7"])
 
     d3.csv(folder + `${type}.csv`, function (d, i, columns) {
         let t = 0;
