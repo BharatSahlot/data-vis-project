@@ -46,6 +46,7 @@ function ShowGraph(g, config, type, folder) {
     const myButton = document.createElement('button');
     myButton.textContent = 'Sort';
     myButton.setAttribute('id', 'myButton');
+    myButton.setAttribute('height', '30px');
     const main = d3.select(config.root);
     main.node().appendChild(myButton);
     

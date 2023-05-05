@@ -41,9 +41,32 @@ export async function Run(config, folder){
         select.appendChild(option);
     }
 
+    const label1 = document.createElement('label');
+    label1.setAttribute('for', 'selectI');
+    label1.textContent = 'Import/Export:';
+
+    // Create the select element
+    const select1 = document.createElement('select');
+    select1.setAttribute('id', 'selectI');
+    select1.setAttribute('name', 'selectI');
+
+        const option1 = document.createElement('option');
+        option1.setAttribute('value', "export");
+        option1.textContent = "export";
+        select1.appendChild(option1);
+
+        const option2 = document.createElement('option');
+        option2.setAttribute('value', "import");
+        option2.textContent = "import";
+        select1.appendChild(option2);
+
     // Add the label and select elements to the form
     form.appendChild(label);
     form.appendChild(select);
+    form.appendChild(label1);
+    form.appendChild(select1);
+
+    
 
     // Add the form to the document
     //document.body.appendChild(form);
@@ -54,11 +77,13 @@ export async function Run(config, folder){
         .attr("height", config.height );
 
     const yearOfStudySelect = document.getElementById("selectYear");
+    const selectExport = document.getElementById("selectI");
 
     const updateGraph = async () => {
         svg.node().innerHTML = "";
 
         const selectedValue=yearOfStudySelect.value;
+        const selectedExport=selectExport.value
 
         let margin = 20,
             diameter = +svg.attr("width"),
@@ -83,18 +108,19 @@ export async function Run(config, folder){
         }
 
         var productColor = d3.interpolateSpectral;
-
+        var Val=selectedExport+'_data'
+        console.log(Val)
         root = d3.hierarchy(root)
             .sum(function (d) {
-                if (d.export_data === undefined) {
+                if (d[Val] === undefined) {
                     return 0
                 }
                 else {
-                    if (d.export_data[selectedValue] === undefined) {
+                    if (d[Val][selectedValue] === undefined) {
                         return 0
                     }
                     else {
-                        return d.export_data[selectedValue]
+                        return d[Val][selectedValue]
                     }
                 }
                 //return d.export_data;
@@ -160,5 +186,6 @@ export async function Run(config, folder){
     };
 
     yearOfStudySelect.addEventListener("change", updateGraph);
+    selectExport.addEventListener("change", updateGraph);
     updateGraph();
 }

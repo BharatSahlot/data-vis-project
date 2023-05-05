@@ -99,7 +99,7 @@ d3.csv("./StackedBar/yearwise.csv", function (data) {
         console.log(keys);
         var stackedData = d3.stack().keys(keys)(data);
 
-        var color = d3.scaleOrdinal().domain(keys).range(d3.schemePaired);
+        var color = d3.scaleOrdinal().domain(keys).range(["#6CA0DC", "#7ebdc2", "#00CED1", "#33658a", "#FFC0CB", "#E0C1B3", "#DA70D6", "#BA55D3", "#9932CC", "#8A2BE2", "#4169E1", "#1E90FF", "#6A5ACD", "#483D8B","#4f759b","#D9F0FF","#00A8E8"]);
 
         var x = d3
             .scaleLinear()

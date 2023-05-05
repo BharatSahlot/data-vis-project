@@ -41,7 +41,8 @@ async function Run(config, folder) {
     // Data and color scale
     var data = d3.map();
     var colorScheme = d3.schemeBuPu[6];
-    console.log(colorScheme)
+    var colorScheme2=d3.schemeBuPu[9]
+    console.log(colorScheme2)
     colorScheme.unshift("#eee")
     var colorScale = d3.scaleThreshold()
         .domain([1, 6, 11, 26, 101, 1001])
@@ -149,7 +150,7 @@ async function Run(config, folder) {
 }
 
 Run({
-    width: 960,
-    height: 600,
+    width: 1200,
+    height: 900,
     root: document.querySelector("#choro")
 }, "./Choropleth/");
